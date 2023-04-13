@@ -1,0 +1,23 @@
+{
+  "name": "loveteemo/robot",
+  "description": "wechat robot",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "loveteemo",
+      "email": "admin@loveteemo.com"
+    },
+    {
+      "name": "keaimao"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "loveteemo\\robot\\": "src"
+    }
+  },
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*"
+  }
+}

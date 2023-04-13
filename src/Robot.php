@@ -67,7 +67,7 @@ class Robot
   public static function getInstance(string $url = "", string $key = "", bool $debug = false): Robot
   {
     if (!isset(self::$instance)) {
-      $instance = new self($url, $debug);
+      $instance = new self($url, $key, $debug);
       self::$instance = $instance;
     }
     return self::$instance;

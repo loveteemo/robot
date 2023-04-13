@@ -1,7 +1,13 @@
 {
   "name": "loveteemo/robot",
-  "description": "wechat robot",
-  "license": "Apache-2.0",
+  "description": "可爱猫微信机器人框架 - HTTP 插件个人对接PHP版本",
+  "type": "library",
+  "license": "Apache 2.0",
+  "autoload": {
+    "psr-4": {
+      "loveteemo\\": "src/"
+    }
+  },
   "authors": [
     {
       "name": "loveteemo",
@@ -11,11 +17,7 @@
       "name": "keaimao"
     }
   ],
-  "autoload": {
-    "psr-4": {
-      "loveteemo\\robot\\": "src"
-    }
-  },
+  "minimum-stability": "dev",
   "require": {
     "ext-json": "*",
     "ext-curl": "*"

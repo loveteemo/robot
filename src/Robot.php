@@ -1,6 +1,6 @@
 <?php
 
-namespace loveteemo\src;
+namespace loveteemo;;
 
 class Robot
 {

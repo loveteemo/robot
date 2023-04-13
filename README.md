@@ -20,7 +20,7 @@ composer require loveteemo/robot
 
 ~~~php
 
-use loveteemo\robot\Robot;
+use loveteemo\Robot;
 
 //登录微信机器人ID
 $robotWxid = "wxid_xxx"; 

@@ -22,17 +22,17 @@ composer require loveteemo/robot
 
 use loveteemo\Robot;
 
-//登录微信机器人ID
-$robotWxid = "wxid_xxx"; 
+//机器人ID
+$robotWxid = "wxid_xxx";
+//请求地址
+$url = "http://127.0.0.1:8073/send";
+//鉴权
+$key = "xx";
+$robot = new Robot($url,$key,false);
 
-//服务器远程调用接口
-$url = "http://1.1.1.1:8073/send";
+//获取昵称 有效 但是数据不是实时的
+$info = $robot->getRobotName($robotWxid);
 
-$robot = new Robot($url,false);
-//被动触发根据情况调整
-
-//主动触发
-$nickname = $robot->getRobotName($robotWxid);
 var_dump($info);
 ~~~
 

@@ -1,48 +1,56 @@
 <?php
 
-namespace loveteemo;;
+namespace loveteemo;
+
+;
 
 class Robot
 {
   private static $instance;
 
   //回调类型
-  public $type;
+  private $type;
 
   //回调来源 用户ID 群消息事件下，为群id
-  public $from_wxid;
+  private $from_wxid;
 
   //回调来源 昵称
-  public $from_name;
+  private $from_name;
 
   //回调来源 用户ID 群消息事件下，为发消息的成员id
-  public $final_from_wxid;
+  private $final_from_wxid;
 
   //回调来源 来源昵称
-  public $final_from_name;
+  private $final_from_name;
 
   //机器人id
-  public $robot_wxid;
+  private $robot_wxid;
 
   //消息内容
   public $msg;
 
   //消息类型参考文档
-  public $msg_type;
+  private $msg_type;
 
   //文件地址：可直接访问的网络地址
-  public $file_url;
+  private $file_url;
 
   //时间戳
-  public $time;
+  private $time;
 
   //调用接口
-  public $url = "http://127.0.0.1:8073/send";
+  private $url = "http://127.0.0.1:8073/send";
 
-  public function __construct($url = "", $idDebug = false)
+  //开启鉴权之后的鉴权参数
+  private $key;
+
+  public function __construct($url = "", $key = "", $idDebug = false)
   {
     if ($url != "") {
       $this->url = $url;
+    }
+    if ($key != "") {
+      $this->key = $key;
     }
     if ($idDebug === true) {
       $this->parseWeChat($_POST);
@@ -52,13 +60,14 @@ class Robot
   /**
    * 单例
    * @param string $url 参数
+   * @param string $key
    * @param bool $debug
    * @return Robot
    */
-  public static function getInstance(string $url = "",bool $debug = false): Robot
+  public static function getInstance(string $url = "", string $key = "", bool $debug = false): Robot
   {
     if (!isset(self::$instance)) {
-      $instance = new self($url,$debug);
+      $instance = new self($url, $debug);
       self::$instance = $instance;
     }
     return self::$instance;
@@ -99,8 +108,7 @@ class Robot
     $data['msg'] = urlencode($msg);
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
   /**
@@ -121,8 +129,7 @@ class Robot
     $data['at_wxid'] = $at_wxid;
     $data['at_name'] = $at_name;
     $data['robot_wxid'] = $robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
   /**
@@ -139,8 +146,7 @@ class Robot
     $data['msg'] = $img_url;
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
   /**
@@ -157,8 +163,7 @@ class Robot
     $data['msg'] = $mp4_path;
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
   /**
@@ -175,8 +180,7 @@ class Robot
     $data['msg'] = $file_path;
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -194,8 +198,7 @@ class Robot
     $data['msg'] = $path;
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -222,8 +225,7 @@ class Robot
     $data['msg'] = $link;
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -241,8 +243,7 @@ class Robot
     $data['msg'] = $name;
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -256,8 +257,7 @@ class Robot
     $data = array();
     $data['type'] = 201;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -271,8 +271,7 @@ class Robot
     $data = array();
     $data['type'] = 202;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -284,8 +283,7 @@ class Robot
   {
     $data = array();
     $data['type'] = 203;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -301,8 +299,7 @@ class Robot
     $data['type'] = 204;
     $data['robot_wxid'] = $robot_wxid;
     $data['is_refresh'] = $is_refresh;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -318,8 +315,7 @@ class Robot
     $data['type'] = 205;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
     $data['is_refresh'] = $is_refresh;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -337,8 +333,7 @@ class Robot
     $data['robot_wxid'] = $robot_wxid;
     $data['group_wxid'] = $group_wxid;
     $data['is_refresh'] = $is_refresh;
-    $response = array('data' => json_encode($data));
-    $result = $this->sendRequest($response, 'post');
+    $result = $this->sendRequest($data, 'post');
     return json_decode($result, true);
   }
 
@@ -357,8 +352,7 @@ class Robot
     $data['robot_wxid'] = $robot_wxid;
     $data['group_wxid'] = $group_wxid;
     $data['member_wxid'] = $member_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -376,8 +370,7 @@ class Robot
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
     $data['friend_wxid'] = $friend_wxid ?: $this->from_wxid;
     $data['msg'] = $json_string ?: $this->msg;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -393,8 +386,7 @@ class Robot
     $data['type'] = 302;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
     $data['msg'] = $json_string ?: $this->msg;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -410,8 +402,7 @@ class Robot
     $data['type'] = 303;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
     $data['msg'] = $json_string ?: $this->msg;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
   /**
@@ -428,8 +419,7 @@ class Robot
     $data['robot_wxid'] = $robot_wxid;
     $data['friend_wxid'] = $friend_wxid;
     $data['note'] = $note;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -445,8 +435,7 @@ class Robot
     $data['type'] = 305;
     $data['robot_wxid'] = $robot_wxid;
     $data['friend_wxid'] = $friend_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -464,8 +453,7 @@ class Robot
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
     $data['group_wxid'] = $group_wxid ?: $this->from_wxid;
     $data['member_wxid'] = $member_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -483,8 +471,7 @@ class Robot
     $data['robot_wxid'] = $robot_wxid;
     $data['group_wxid'] = $group_wxid;
     $data['group_name'] = $group_name;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
   /**
@@ -501,8 +488,7 @@ class Robot
     $data['robot_wxid'] = $robot_wxid;
     $data['group_wxid'] = $group_wxid;
     $data['notice'] = $notice;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -517,9 +503,8 @@ class Robot
     $data = array();
     $data['type'] = 309;
     $data['robot_wxid'] = $robot_wxid;
-    $data['friends'] = $friends;  // 好友id数组
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    $data['friends'] = $friends;
+    return $this->sendRequest($data, 'post');
   }
 
 
@@ -529,14 +514,13 @@ class Robot
    * @param string $group_wxid 群id
    * @return array
    */
-  public function quitGroup($robot_wxid, $group_wxid)
+  public function quitGroup(string $robot_wxid, string $group_wxid)
   {
     $data = array();
     $data['type'] = 310;
     $data['robot_wxid'] = $robot_wxid;
     $data['group_wxid'] = $group_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
   /**
@@ -546,33 +530,34 @@ class Robot
    * @param string $friend_wxid 好友id
    * @return array
    */
-  public function inviteInGroup($robot_wxid, $group_wxid, $friend_wxid)
+  public function inviteInGroup(string $robot_wxid, string $group_wxid, string $friend_wxid)
   {
     $data = array();
     $data['type'] = 311;
     $data['robot_wxid'] = $robot_wxid;
     $data['group_wxid'] = $group_wxid;
     $data['friend_wxid'] = $friend_wxid;
-    $response = array('data' => json_encode($data));
-    return $this->sendRequest($response, 'post');
+    return $this->sendRequest($data, 'post');
   }
 
 
   /**
    * HTTP请求
-   * @param mixed $params 表单参数
-   * @param int $timeout 超时时间
+   * @param array $data
    * @param string $method 请求方法 post / get
+   * @param int $timeout 超时时间
    * @return array|string
    */
-  public function sendRequest($params, $method = 'get', $timeout = 3)
+  public function sendRequest(array $data, string $method = 'get', int $timeout = 3)
   {
+    if ($this->key != "") {
+      $data['key'] = $this->key;
+    }
+    $params = ['data' => json_encode($data)];
     $curl = curl_init();
-    $is_https = stripos($this->url, 'https://') === 0 ? true : false;
-    if ('get' == $method) { //以GET方式发送请求
-      curl_setopt($curl, CURLOPT_URL, $this->url);
-    } else { //以POST方式发送请求
-      curl_setopt($curl, CURLOPT_URL, $this->url);
+    $is_https = stripos($this->url, 'https://') === 0;
+    curl_setopt($curl, CURLOPT_URL, $this->url);
+    if ('get' != $method) { //以POST方式发送请求
       curl_setopt($curl, CURLOPT_POST, 1); //post提交方式
       curl_setopt($curl, CURLOPT_POSTFIELDS, $params); //设置传送的参数
     }
@@ -594,9 +579,9 @@ class Robot
     $res = json_decode($res, true);
     $data = json_decode($res['data'], true);
     if ($data) {
-      $res = $data;
+      $res['data'] = $data;
     } else {
-      $res = urldecode($res['data']);
+      $res['data'] = urldecode($res['data']);
     }
     return $res;
   }

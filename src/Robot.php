@@ -2,8 +2,6 @@
 
 namespace loveteemo;
 
-;
-
 class Robot
 {
   private static $instance;
@@ -99,13 +97,14 @@ class Robot
    * @param string $msg 消息内容
    * @param string $robot_wxid
    * @param string $to_wxid
+   * @param bool $isDebug
    * @return array
    */
-  public function sendTextMsg(string $msg, string $robot_wxid = "", string $to_wxid = "")
+  public function sendTextMsg(string $msg, string $robot_wxid = "", string $to_wxid = "", bool $isDebug = false)
   {
     $data = array();
     $data['type'] = 100;
-    $data['msg'] = urlencode($msg);
+    $data['msg'] = !$isDebug ? urlencode($msg) : $msg;
     $data['to_wxid'] = $to_wxid ?: $this->from_wxid;
     $data['robot_wxid'] = $robot_wxid ?: $this->robot_wxid;
     return $this->sendRequest($data, 'post');
